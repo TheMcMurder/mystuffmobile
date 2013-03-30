@@ -124,8 +124,8 @@ public class MyStuffMobile extends Activity {
 				// pulling the balance from the JSON object and posting it to the class variable string object "balance"
 //				balance = respobj.getString("balance");
 				
-				String status = respobj.getString("status");
-				showToast(status);
+//				String status = respobj.getString("status");
+//				showToast(status);
 				
 
 				String S_response = respobj.toString();
@@ -133,7 +133,7 @@ public class MyStuffMobile extends Activity {
 				return S_response;
 			} catch (Exception e) {
 				Log.v("tag", "The post to the server failed");
-				showToast("failed to post");
+				//showToast("failed to post");
 				StringWriter sw = new StringWriter();
 				PrintWriter pw = new PrintWriter(sw);
 				e.printStackTrace(pw);
