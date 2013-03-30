@@ -18,6 +18,8 @@
        <include android:id="@+id/firstlayout" layout="@layout/login2"/>
        
        <include android:id="@+id/secondlayout" layout="@layout/picturelist" />
+       
+       <include android:id="@+id/thirdlayout" layout="@layout/picview" />
 
     </ViewFlipper>
 

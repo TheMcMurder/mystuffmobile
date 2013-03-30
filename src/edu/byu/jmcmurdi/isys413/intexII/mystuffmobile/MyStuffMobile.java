@@ -39,6 +39,10 @@ public class MyStuffMobile extends Activity {
 
 		
 	}
+	public void loginbtnclick(View view){
+		System.out.println("LoginButtonClicked");
+		vf.setDisplayedChild(1);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
