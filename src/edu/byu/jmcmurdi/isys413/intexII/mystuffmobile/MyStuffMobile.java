@@ -60,6 +60,9 @@ public class MyStuffMobile extends Activity {
 		
 		LoginPosting lposting = new LoginPosting(username, password);
 		
+		//Log.v("username", username);
+		//Log.v("username", password);
+		
 		lposting.execute();
 		
 		
@@ -85,9 +88,12 @@ public class MyStuffMobile extends Activity {
 		String password = null;
 		String username = null;
 
-		public LoginPosting(String password, String username) {
+		public LoginPosting(String username, String password) {
 			this.username = username;
 			this.password = password;
+			Log.v("username", username);
+			Log.v("username", password);
+			
 		}
 		
 		/**
@@ -124,8 +130,8 @@ public class MyStuffMobile extends Activity {
 				// pulling the balance from the JSON object and posting it to the class variable string object "balance"
 //				balance = respobj.getString("balance");
 				
-//				String status = respobj.getString("status");
-//				showToast(status);
+				String status = respobj.getString("status");
+				showToast(status);
 				
 
 				String S_response = respobj.toString();
