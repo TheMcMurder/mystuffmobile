@@ -132,6 +132,10 @@ public class MyStuffMobile extends Activity {
 				
 				String status = respobj.getString("status");
 				showToast(status);
+				String custid = respobj.getString("custid");
+				showToast(custid);
+				
+				Log.v("myJSON", respobj.toString());
 				
 
 				String S_response = respobj.toString();
