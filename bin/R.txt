@@ -15,12 +15,13 @@ int dimen activity_vertical_margin 0x7f050002
 int dimen default_gap 0x7f050000
 int drawable ic_launcher 0x7f020000
 int id LinearLayout1 0x7f040015
-int id action_settings 0x7f04001f
+int id action_settings 0x7f040020
 int id alignBounds 0x7f040002
 int id alignMargins 0x7f040003
 int id bottom 0x7f040005
 int id btnlogin 0x7f040014
 int id btnlogout 0x7f04001b
+int id btnprint 0x7f04001f
 int id btnprintpic 0x7f04001c
 int id btnviewpic 0x7f04001d
 int id center 0x7f04000c
@@ -34,10 +35,10 @@ int id fill_horizontal 0x7f04000b
 int id fill_vertical 0x7f040009
 int id firstlayout 0x7f040017
 int id horizontal 0x7f040000
+int id iv 0x7f04001e
 int id left 0x7f040006
 int id lv 0x7f04001a
 int id password 0x7f040013
-int id radioButton1 0x7f04001e
 int id right 0x7f040007
 int id secondlayout 0x7f040018
 int id start 0x7f040010

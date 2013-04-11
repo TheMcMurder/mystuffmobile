@@ -4,10 +4,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RadioButton
-        android:id="@+id/radioButton1"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="RadioButton" />
+        android:layout_weight="0.37"
+        android:src="@drawable/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btnprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Print" />
+    </LinearLayout>
 
 </LinearLayout>

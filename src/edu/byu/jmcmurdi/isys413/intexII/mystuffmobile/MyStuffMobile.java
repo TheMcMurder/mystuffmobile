@@ -1,6 +1,7 @@
 package edu.byu.jmcmurdi.isys413.intexII.mystuffmobile;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,11 +35,17 @@ import com.google.gson.Gson;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.Editable;
+import android.util.Base64;
 import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -50,6 +57,7 @@ public class MyStuffMobile extends Activity {
 	private ArrayList<String> captionList = new ArrayList<String>();
 	ListView lv = null;
 	private String custid = null;
+	ImageView iv = null;
 
 	ArrayAdapter<String> adapter = null;
 
@@ -112,7 +120,7 @@ public class MyStuffMobile extends Activity {
 			}
 
 		} catch (InterruptedException e) {
-			showToast("INterrupted Exception");
+			showToast("Interrupted Exception");
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			showToast("ExecutionException");
@@ -128,18 +136,89 @@ public class MyStuffMobile extends Activity {
 		Log.v("btn", "PicBtnClicked");
 		// showToast("Selected item id " + lv.getSelectedItemId());
 		//showToast(lv.getCheckedItemPosition() + "");
+		SparseBooleanArray items = new SparseBooleanArray();
+		items = lv.getCheckedItemPositions();
+		ArrayList<String> checkeditems = new ArrayList<String>();
+		for (int i = 0 ; i < items.size(); i++){
+			int position = items.keyAt(i);
+			if (items.valueAt(i)){
+				checkeditems.add(adapter.getItem(position));
+			}
+			
+		}
+		if (checkeditems.size() > 1){
+			showToast("You have " + checkeditems.size() + " items selected. Please disselect " + (checkeditems.size() - 1) + " item(s)");
+		}
+		else{
+			//showToast("good boy");
+			String captiontext = checkeditems.get(0).toString();
+			PictureRequest pr = new PictureRequest(captiontext);
+			
+			pr.execute();
+			String prTemp = null;
+			
+			//vf.setDisplayedChild(2);
+			
+			String line = null;
+			
+			try {
+				line = pr.get();
+				String linelength = line.length() + "";
+				Log.v("Line", linelength);
+				Log.v("line", line);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+//			try {
+//				InputStream in = new ByteArrayInputStream(pr.get().getBytes());
+//				StringBuilder sb = new StringBuilder();
+//				BufferedReader br = new BufferedReader(new InputStreamReader(in));
+//				String line = null;
+//				try {
+//					while ((line = br.readLine()) != null){
+//						sb.append(line);
+//					}
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				prTemp = pr.get();
+//				Log.v("line", line);
+//				
+//				iv = (ImageView)findViewById(R.id.iv);
+//				byte[] decodedString = Base64.decode(prTemp, Base64.DEFAULT);
+//				Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//				
+//				iv.setImageBitmap(decodedByte);
+//				
+//				vf.setDisplayedChild(2);
+//				
+//			} catch (InterruptedException e) {
+//				showToast("Interrupted Exception");
+//				e.printStackTrace();
+//			} catch (ExecutionException e) {
+//				showToast("ExecutionException");
+//				e.printStackTrace();
+//			}
+			
+			
+		}
+		
 	}
 
 	private class PictureRequest extends AsyncTask<String, Void, String> {
 
-		String password = null;
-		String username = null;
+		String captiontext = null;
 
-		public PictureRequest(String username, String password) {
-			this.username = username;
-			this.password = password;
-			// Log.v("username", username);
-			// Log.v("username", password);
+		public PictureRequest(String captiontext) {
+			this.captiontext = captiontext;
+			
 
 		}
 
@@ -153,48 +232,28 @@ public class MyStuffMobile extends Activity {
 				// Create a new HttpClient and Post Header
 				HttpClient httpclient = new DefaultHttpClient();
 
-				HttpPost httppost = new HttpPost(
-						"http://10.0.2.2:2020/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.Login.action");
-				// showToast("made it 2 baby");
-				// setting up the nameVaule pairs
+				HttpPost httppost = new HttpPost("http://10.0.2.2:2020/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.GetPic.action");
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-				nameValuePairs
-						.add(new BasicNameValuePair("username", username));
-				nameValuePairs
-						.add(new BasicNameValuePair("password", password));
+				
 				nameValuePairs.add(new BasicNameValuePair("ismobile", "true"));
-				// nameValuePairs.add(new BasicNameValuePair("username",
-				// customer_id));
-				// nameValuePairs.add(new BasicNameValuePair("imagedata",
-				// imageString));
+				nameValuePairs.add(new BasicNameValuePair("captiontext", captiontext));
+				
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-				// showToast("made it 3 baby");
+				
 				HttpResponse response = null;
-				// showToast("made it 4 baby");
 				response = httpclient.execute(httppost);
-				// showToast("made it 5 baby");
 				HttpEntity e = response.getEntity();
-				// showToast("made it 6 baby");
 
 				JSONObject respobj = new JSONObject(EntityUtils.toString(e));
 
-				// pulling the balance from the JSON object and posting it to
-				// the class variable string object "balance"
-				// balance = respobj.getString("balance");
 
 				String status = respobj.getString("status");
 				// showToast(status);
-				String custid = respobj.getString("custid");
-				if (custid != null) {
-					setCustid(custid);
-				}
-				// showToast(custid);
+				String encodedpic = respobj.getString("ePic");
+				
+			
 
-				// Log.v("myJSON", respobj.toString());
-
-				// JSONArray jsonarray = respobj.getJSONArray("piclist");
-
-				String S_response = respobj.toString();
+				String S_response = encodedpic;
 
 				return S_response;
 			} catch (Exception e) {
@@ -326,6 +385,10 @@ public class MyStuffMobile extends Activity {
 		EditText usernametext = (EditText) findViewById(R.id.username);
 		passwordtext.setText("");
 		usernametext.setText("");
+		adapter.clear();
+		adapter.notifyDataSetChanged();
+		lv.setAdapter(null);
+		
 		
 		vf.setDisplayedChild(0);
 		
