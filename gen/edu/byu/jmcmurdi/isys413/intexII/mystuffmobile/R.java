@@ -228,13 +228,14 @@ containing a value of this type.
     }
     public static final class id {
         public static final int LinearLayout1=0x7f040015;
-        public static final int Logout=0x7f04001b;
-        public static final int PrintSelected=0x7f04001c;
         public static final int action_settings=0x7f04001f;
         public static final int alignBounds=0x7f040002;
         public static final int alignMargins=0x7f040003;
         public static final int bottom=0x7f040005;
         public static final int btnlogin=0x7f040014;
+        public static final int btnlogout=0x7f04001b;
+        public static final int btnprintpic=0x7f04001c;
+        public static final int btnviewpic=0x7f04001d;
         public static final int center=0x7f04000c;
         public static final int center_horizontal=0x7f04000a;
         public static final int center_vertical=0x7f040008;
@@ -258,7 +259,6 @@ containing a value of this type.
         public static final int username=0x7f040012;
         public static final int vertical=0x7f040001;
         public static final int vf=0x7f040016;
-        public static final int viewSelectedPic=0x7f04001d;
     }
     public static final class layout {
         public static final int login2=0x7f030000;

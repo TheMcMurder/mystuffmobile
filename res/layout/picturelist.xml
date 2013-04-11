@@ -15,25 +15,28 @@
         android:layout_height="match_parent" >
 
         <Button
-            android:id="@+id/Logout"
+            android:id="@+id/btnlogout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.32"
+            android:onClick="btnLogoutClicked"
             android:text="Logout" />
 
         <Button
-            android:id="@+id/PrintSelected"
+            android:id="@+id/btnprintpic"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
             android:text="Print Pics" />
 
         <Button
-            android:id="@+id/viewSelectedPic"
+            android:id="@+id/btnviewpic"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.33"
+            android:onClick="PicViewBtnClick"
             android:text="View" />
+
     </LinearLayout>
 
 </LinearLayout>

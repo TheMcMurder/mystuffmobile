@@ -15,13 +15,14 @@ int dimen activity_vertical_margin 0x7f050002
 int dimen default_gap 0x7f050000
 int drawable ic_launcher 0x7f020000
 int id LinearLayout1 0x7f040015
-int id Logout 0x7f04001b
-int id PrintSelected 0x7f04001c
 int id action_settings 0x7f04001f
 int id alignBounds 0x7f040002
 int id alignMargins 0x7f040003
 int id bottom 0x7f040005
 int id btnlogin 0x7f040014
+int id btnlogout 0x7f04001b
+int id btnprintpic 0x7f04001c
+int id btnviewpic 0x7f04001d
 int id center 0x7f04000c
 int id center_horizontal 0x7f04000a
 int id center_vertical 0x7f040008
@@ -45,7 +46,6 @@ int id top 0x7f040004
 int id username 0x7f040012
 int id vertical 0x7f040001
 int id vf 0x7f040016
-int id viewSelectedPic 0x7f04001d
 int layout login2 0x7f030000
 int layout mystuffmobile 0x7f030001
 int layout picturelist 0x7f030002

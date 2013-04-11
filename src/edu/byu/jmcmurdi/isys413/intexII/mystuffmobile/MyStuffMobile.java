@@ -1,11 +1,13 @@
 package edu.byu.jmcmurdi.isys413.intexII.mystuffmobile;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -47,8 +49,10 @@ public class MyStuffMobile extends Activity {
 	HttpClient client = null;
 	private ArrayList<String> captionList = new ArrayList<String>();
 	ListView lv = null;
+	private String custid = null;
 
 	ArrayAdapter<String> adapter = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -79,33 +83,34 @@ public class MyStuffMobile extends Activity {
 			if (lposting.get().equals("failed")) {
 				showToast("Something went seriously wrong with posting the datas");
 				showToast(lposting.get());
-			}else{
+			} else {
 				temp = lposting.get();
-				//showToast(temp);
+				// showToast(temp);
 				JSONObject myjson = null;
 				try {
 					myjson = new JSONObject(temp);
 					String String_shouldbe_array = myjson.getString("piclist");
-					showToast(String_shouldbe_array);
-					Log.v("piclist",String_shouldbe_array);
-					//JSONArray myjsonarray = (JSONArray)myjson;
+					// /showToast(String_shouldbe_array);
+					Log.v("piclist", String_shouldbe_array);
+					// JSONArray myjsonarray = (JSONArray)myjson;
 					JSONArray myjsonarray = new JSONArray(String_shouldbe_array);
-					for (int i = 0; i < myjsonarray.length(); i ++){
+					for (int i = 0; i < myjsonarray.length(); i++) {
 						JSONObject tempJSONobj = myjsonarray.getJSONObject(i);
-						showToast(tempJSONobj.get("caption").toString());
+						// showToast(tempJSONobj.get("caption").toString());
 						captionList.add(tempJSONobj.get("caption").toString());
 					}
-					adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice, captionList);
+					adapter = new ArrayAdapter<String>(this,
+							android.R.layout.simple_list_item_multiple_choice,
+							captionList);
 					lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 					lv.setAdapter(adapter);
-					
-				
+
 				} catch (JSONException e) {
 					showToast("Problem converting the string to a JSON object or converting the string into a jsonarray");
 					e.printStackTrace();
 				}
 			}
-				
+
 		} catch (InterruptedException e) {
 			showToast("INterrupted Exception");
 			e.printStackTrace();
@@ -115,25 +120,26 @@ public class MyStuffMobile extends Activity {
 		}
 
 		vf.setDisplayedChild(1);
+		
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.my_stuff_mobile, menu);
-		return true;
+	
+	public void PicViewBtnClick(View view) {
+		Log.v("btn", "PicBtnClicked");
+		// showToast("Selected item id " + lv.getSelectedItemId());
+		//showToast(lv.getCheckedItemPosition() + "");
 	}
 
-	private class LoginPosting extends AsyncTask<String, Void, String> {
+	private class PictureRequest extends AsyncTask<String, Void, String> {
 
 		String password = null;
 		String username = null;
 
-		public LoginPosting(String username, String password) {
+		public PictureRequest(String username, String password) {
 			this.username = username;
 			this.password = password;
-			Log.v("username", username);
-			Log.v("username", password);
+			// Log.v("username", username);
+			// Log.v("username", password);
 
 		}
 
@@ -177,13 +183,101 @@ public class MyStuffMobile extends Activity {
 				// balance = respobj.getString("balance");
 
 				String status = respobj.getString("status");
-				//showToast(status);
+				// showToast(status);
 				String custid = respobj.getString("custid");
-				//showToast(custid);
+				if (custid != null) {
+					setCustid(custid);
+				}
+				// showToast(custid);
 
-				//Log.v("myJSON", respobj.toString());
+				// Log.v("myJSON", respobj.toString());
 
-				//JSONArray jsonarray = respobj.getJSONArray("piclist");
+				// JSONArray jsonarray = respobj.getJSONArray("piclist");
+
+				String S_response = respobj.toString();
+
+				return S_response;
+			} catch (Exception e) {
+				Log.v("tag", "The post to the server failed");
+				// showToast("failed to post");
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+				e.printStackTrace(pw);
+				String test = sw.toString(); // stack trace as a string
+				Log.v("tag", test);
+			}
+			return "failed";
+		} /* do in background */
+
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.my_stuff_mobile, menu);
+		return true;
+	}
+
+	private class LoginPosting extends AsyncTask<String, Void, String> {
+
+		String password = null;
+		String username = null;
+
+		public LoginPosting(String username, String password) {
+			this.username = username;
+			this.password = password;
+			// Log.v("username", username);
+			// Log.v("username", password);
+
+		}
+
+		/**
+		 * The portion of the asynchronous task that runs in the background
+		 */
+		protected String doInBackground(String... image) {
+			try {
+
+				// showToast("made it baby");
+				// Create a new HttpClient and Post Header
+				HttpClient httpclient = new DefaultHttpClient();
+
+				HttpPost httppost = new HttpPost(
+						"http://10.0.2.2:2020/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.Login.action");
+				// showToast("made it 2 baby");
+				// setting up the nameVaule pairs
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs
+						.add(new BasicNameValuePair("username", username));
+				nameValuePairs
+						.add(new BasicNameValuePair("password", password));
+				nameValuePairs.add(new BasicNameValuePair("ismobile", "true"));
+				// nameValuePairs.add(new BasicNameValuePair("username",
+				// customer_id));
+				// nameValuePairs.add(new BasicNameValuePair("imagedata",
+				// imageString));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				// showToast("made it 3 baby");
+				HttpResponse response = null;
+				// showToast("made it 4 baby");
+				response = httpclient.execute(httppost);
+				// showToast("made it 5 baby");
+				HttpEntity e = response.getEntity();
+				// showToast("made it 6 baby");
+
+				JSONObject respobj = new JSONObject(EntityUtils.toString(e));
+
+				// pulling the balance from the JSON object and posting it to
+				// the class variable string object "balance"
+				// balance = respobj.getString("balance");
+
+				String status = respobj.getString("status");
+				// showToast(status);
+				String custid = respobj.getString("custid");
+				// showToast(custid);
+
+				// Log.v("myJSON", respobj.toString());
+
+				// JSONArray jsonarray = respobj.getJSONArray("piclist");
 
 				String S_response = respobj.toString();
 
@@ -211,4 +305,30 @@ public class MyStuffMobile extends Activity {
 			}
 		});
 	}
+
+	/**
+	 * @return the custid
+	 */
+	public String getCustid() {
+		return custid;
+	}
+
+	/**
+	 * @param custid
+	 *            the custid to set
+	 */
+	public void setCustid(String custid) {
+		this.custid = custid;
+	}
+	public void btnLogoutClicked(View view){
+		setCustid(null);
+		EditText passwordtext = (EditText) findViewById(R.id.password);
+		EditText usernametext = (EditText) findViewById(R.id.username);
+		passwordtext.setText("");
+		usernametext.setText("");
+		
+		vf.setDisplayedChild(0);
+		
+	}
+
 }
