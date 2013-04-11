@@ -5,9 +5,35 @@
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/lv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="398dp" >
     </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/Logout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.32"
+            android:text="Logout" />
+
+        <Button
+            android:id="@+id/PrintSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:text="Print Pics" />
+
+        <Button
+            android:id="@+id/viewSelectedPic"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:text="View" />
+    </LinearLayout>
 
 </LinearLayout>

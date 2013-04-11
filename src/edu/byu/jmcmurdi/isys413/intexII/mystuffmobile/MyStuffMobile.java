@@ -37,20 +37,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+import android.widget.ArrayAdapter;
 
 public class MyStuffMobile extends Activity {
 	ViewFlipper vf = null;
 	HttpClient client = null;
 	private ArrayList<String> captionList = new ArrayList<String>();
+	ListView lv = null;
 
+	ArrayAdapter<String> adapter = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mystuffmobile);
 		vf = (ViewFlipper) findViewById(R.id.vf);
 		client = new DefaultHttpClient();
+		lv = (ListView) findViewById(R.id.lv);
 
 	}
 
@@ -90,6 +95,9 @@ public class MyStuffMobile extends Activity {
 						showToast(tempJSONobj.get("caption").toString());
 						captionList.add(tempJSONobj.get("caption").toString());
 					}
+					adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice, captionList);
+					lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+					lv.setAdapter(adapter);
 					
 				
 				} catch (JSONException e) {
@@ -106,7 +114,7 @@ public class MyStuffMobile extends Activity {
 			e.printStackTrace();
 		}
 
-		// vf.setDisplayedChild(1);
+		vf.setDisplayedChild(1);
 	}
 
 	@Override
