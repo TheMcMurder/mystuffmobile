@@ -164,49 +164,26 @@ public class MyStuffMobile extends Activity {
 			try {
 				line = pr.get();
 				String linelength = line.length() + "";
-				Log.v("Line", linelength);
-				Log.v("line", line);
+				//`Log.v("Line", linelength);
+				//Log.v("line", line);
+				//showToast("zero");
+				byte[] imageAsBytes = Base64.decode(line.getBytes(), Base64.DEFAULT);
+				//showToast("one");
+				Bitmap decodedByte = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+				//showToast("two");
+				iv = (ImageView)findViewById(R.id.iv);
+				iv.setImageBitmap(decodedByte);
+				//showToast("three");
+				vf.setDisplayedChild(2);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			
-			
-//			try {
-//				InputStream in = new ByteArrayInputStream(pr.get().getBytes());
-//				StringBuilder sb = new StringBuilder();
-//				BufferedReader br = new BufferedReader(new InputStreamReader(in));
-//				String line = null;
-//				try {
-//					while ((line = br.readLine()) != null){
-//						sb.append(line);
-//					}
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				prTemp = pr.get();
-//				Log.v("line", line);
-//				
-//				iv = (ImageView)findViewById(R.id.iv);
-//				byte[] decodedString = Base64.decode(prTemp, Base64.DEFAULT);
-//				Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//				
-//				iv.setImageBitmap(decodedByte);
-//				
-//				vf.setDisplayedChild(2);
-//				
-//			} catch (InterruptedException e) {
-//				showToast("Interrupted Exception");
-//				e.printStackTrace();
-//			} catch (ExecutionException e) {
-//				showToast("ExecutionException");
-//				e.printStackTrace();
-//			}
-			
+		
 			
 		}
 		
