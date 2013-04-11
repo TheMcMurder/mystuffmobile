@@ -32,8 +32,8 @@ int id fill_vertical 0x7f040009
 int id firstlayout 0x7f040017
 int id horizontal 0x7f040000
 int id left 0x7f040006
+int id listView1 0x7f04001a
 int id password 0x7f040013
-int id progressBar1 0x7f04001a
 int id radioButton1 0x7f04001b
 int id right 0x7f040007
 int id secondlayout 0x7f040018

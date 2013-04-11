@@ -245,8 +245,8 @@ containing a value of this type.
         public static final int firstlayout=0x7f040017;
         public static final int horizontal=0x7f040000;
         public static final int left=0x7f040006;
+        public static final int listView1=0x7f04001a;
         public static final int password=0x7f040013;
-        public static final int progressBar1=0x7f04001a;
         public static final int radioButton1=0x7f04001b;
         public static final int right=0x7f040007;
         public static final int secondlayout=0x7f040018;
