@@ -69,6 +69,7 @@ public class MyStuffMobile extends Activity {
 	ImageView iv = null;
 	private int vfloginview = 0;
 	private int vflistview = 0;
+	private boolean vfsentinal = false;
 
 	ArrayAdapter<String> adapter = null;
 
@@ -140,6 +141,7 @@ public class MyStuffMobile extends Activity {
 					//Toast.makeText(this, "Balance updated see notification for details", Toast.LENGTH_LONG).show();
 					// Toast.makeText(this, balance, Toast.LENGTH_LONG).show();
 					Log.v("Success", postingCamera.get());
+					refreshlist();
 				}
 
 			} catch (Exception e) {
@@ -200,7 +202,6 @@ public class MyStuffMobile extends Activity {
 
 				JSONObject respobj = new JSONObject(EntityUtils.toString(e));
 
-				
 
 				String S_response = respobj.toString();
 
@@ -225,7 +226,9 @@ public class MyStuffMobile extends Activity {
 
 	public void loginbtnclick(View view) {
 		try {
-			vfloginview = vf.getCurrentView().getId();
+			if(vfsentinal == false){
+				vfloginview = vf.getCurrentView().getId();
+			}
 			System.out.println("LoginButtonClicked");
 			EditText passwordtext = (EditText) findViewById(R.id.password);
 			EditText usernametext = (EditText) findViewById(R.id.username);
@@ -282,7 +285,11 @@ public class MyStuffMobile extends Activity {
 		}
 
 		vf.setDisplayedChild(1);
-		vflistview = vf.getCurrentView().getId();
+		if(vfsentinal == false){
+			vflistview = vf.getCurrentView().getId();
+		}
+		vfsentinal = true;
+		
 		
 	}
 
@@ -544,6 +551,12 @@ public class MyStuffMobile extends Activity {
 		
 		vf.setDisplayedChild(0);
 		
+	}
+	public void refreshlist(){
+		adapter.clear();
+		adapter.notifyDataSetChanged();
+		lv.setAdapter(null);
+		loginbtnclick(lv);
 	}
 
 }
