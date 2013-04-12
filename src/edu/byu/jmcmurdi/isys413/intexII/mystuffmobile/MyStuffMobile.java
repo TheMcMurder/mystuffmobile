@@ -2,6 +2,8 @@ package edu.byu.jmcmurdi.isys413.intexII.mystuffmobile;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,9 +34,16 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Editable;
@@ -58,6 +67,8 @@ public class MyStuffMobile extends Activity {
 	ListView lv = null;
 	private String custid = null;
 	ImageView iv = null;
+	private int vfloginview = 0;
+	private int vflistview = 0;
 
 	ArrayAdapter<String> adapter = null;
 
@@ -68,11 +79,153 @@ public class MyStuffMobile extends Activity {
 		vf = (ViewFlipper) findViewById(R.id.vf);
 		client = new DefaultHttpClient();
 		lv = (ListView) findViewById(R.id.lv);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+	}
+	
+	
+	
+	public void btnNewPicClick(View view) {
+		final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(this)));
+		startActivityForResult(intent, TAKE_PHOTO_CODE);
+	}
+
+	private static final int TAKE_PHOTO_CODE = 1;
+
+	/**
+	 * This method will either create or pull the temporary file /sdcard/image.tmp
+	 * 
+	 * @param context
+	 * @return
+	 */
+	private File getTempFile(Context context) {
+		// it will return /sdcard/image.tmp
+		final File path = new File(Environment.getExternalStorageDirectory(), context.getPackageName());
+		if (!path.exists()) {
+			path.mkdir();
+		}
+		return new File(path, "image.tmp");
+	}
+
+	/**
+	 * This method takes place after the image has been taken and runs the rest of the program calling other methods This method only calls other methods if the resultcode equals okay and the photo was successfully taken
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK && requestCode == TAKE_PHOTO_CODE) {
+			File file = getTempFile(this);
+			try {
+				Bitmap captureBmp = Media.getBitmap(getContentResolver(), Uri.fromFile(file));
+				// ImageView viewer = (ImageView) findViewById(R.id.pictureViewer);
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				// viewer.setImageBitmap(captureBmp);
+				InputStream in = new FileInputStream(file);
+				int count;
+				byte[] buffer = new byte[512];
+				while ((count = in.read(buffer)) >= 0) {
+					out.write(buffer, 0, count);
+				}
+				String imagedata = Base64.encodeToString(out.toByteArray(), Base64.DEFAULT);
+
+				PicturePosting postingCamera = new PicturePosting(imagedata);
+				postingCamera.execute(imagedata);
+
+				if (postingCamera.get().equals("failed")) {
+					Toast.makeText(this, "Posting failed please try again later", Toast.LENGTH_LONG).show();
+				} else {
+
+					//testnotification(captureBmp);
+
+					//Toast.makeText(this, "Balance updated see notification for details", Toast.LENGTH_LONG).show();
+					// Toast.makeText(this, balance, Toast.LENGTH_LONG).show();
+					Log.v("Success", postingCamera.get());
+				}
+
+			} catch (Exception e) {
+				Toast.makeText(this, "Something went seriously wrong jim...", Toast.LENGTH_LONG).show();
+
+				/*
+				 * Jump to a new activity by using this: Intent intent = new Intent(this, NextActivity.class); intent.putExtra("myKey","myvalue"); StartActivity(intent);
+				 */
+
+			}
+
+		}
+	}
+
+	/**
+	 * This class is an asynchronous implementation of httppost and execute
+	 * 
+	 * @author Jedi Master Justin Paul McMurdie
+	 * 
+	 */
+	// Android 4.1.1 requires all http commands to run as asynchronous tasks
+	private class PicturePosting extends AsyncTask<String, Void, String> {
+		public PicturePosting(String imagein) {
+			imageString = imagein;
+		}
+
+		private String imageString = null;
+		//String status = null;
+
+		/**
+		 * The portion of the asynchronous task that runs in the background
+		 */
+		protected String doInBackground(String... image) {
+			try {
+
+				
+				// Create a new HttpClient and Post Header
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httppost = new HttpPost("http://10.0.2.2:2020/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.Postimage.action");
+
+				// setting up the nameVaule pairs
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				nameValuePairs.add(new BasicNameValuePair("imagedata", imageString));
+				nameValuePairs.add(new BasicNameValuePair("ismobile", "true"));
+				nameValuePairs.add(new BasicNameValuePair("custid", custid));
+				//showToast(custid);
+				nameValuePairs.add(new BasicNameValuePair("caption", "Dcc-" + System.currentTimeMillis()/3.14159/1000000000));
+				nameValuePairs.add(new BasicNameValuePair("picname", "temppicname"));
+
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+				HttpResponse response = null;
+
+				response = httpclient.execute(httppost);
+
+				HttpEntity e = response.getEntity();
+				//showToast("E = " + e.toString());
+
+				JSONObject respobj = new JSONObject(EntityUtils.toString(e));
+
+				
+
+				String S_response = respobj.toString();
+
+				return S_response;
+			} catch (Exception e) {
+				Log.v("tag", "The post to the server failed");
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+				e.printStackTrace(pw);
+				String test = sw.toString(); // stack trace as a string
+				Log.v("why", test);
+			}
+			return "failed";
+		} /* do in background */
 
 	}
 
+	
+	
+	
+	
+
 	public void loginbtnclick(View view) {
 		try {
+			vfloginview = vf.getCurrentView().getId();
 			System.out.println("LoginButtonClicked");
 			EditText passwordtext = (EditText) findViewById(R.id.password);
 			EditText usernametext = (EditText) findViewById(R.id.username);
@@ -90,10 +243,11 @@ public class MyStuffMobile extends Activity {
 
 			if (lposting.get().equals("failed")) {
 				showToast("Something went seriously wrong with posting the datas");
-				showToast(lposting.get());
+				//showToast(lposting.get());
 			} else {
 				temp = lposting.get();
-				// showToast(temp);
+				//showToast(temp);
+				
 				JSONObject myjson = null;
 				try {
 					myjson = new JSONObject(temp);
@@ -128,6 +282,7 @@ public class MyStuffMobile extends Activity {
 		}
 
 		vf.setDisplayedChild(1);
+		vflistview = vf.getCurrentView().getId();
 		
 	}
 
@@ -227,7 +382,6 @@ public class MyStuffMobile extends Activity {
 				String status = respobj.getString("status");
 				// showToast(status);
 				String encodedpic = respobj.getString("ePic");
-				
 			
 
 				String S_response = encodedpic;
@@ -246,6 +400,25 @@ public class MyStuffMobile extends Activity {
 		} /* do in background */
 
 	}
+	
+	@Override
+	public void onBackPressed(){
+		if(vf.getCurrentView().getId() == vflistview){
+			btnLogoutClicked(iv);
+			//showToast("whatup");
+			
+		}
+		else if(vf.getCurrentView().getId() == vfloginview){
+			super.onBackPressed();
+			//showToast("whatup");
+		}
+		else{
+			//showToast(vf.getId() + "");
+			//Log.v("viewstuff", vf.getCurrentView().getId()+ "");
+			
+			vf.showPrevious();
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -253,6 +426,7 @@ public class MyStuffMobile extends Activity {
 		getMenuInflater().inflate(R.menu.my_stuff_mobile, menu);
 		return true;
 	}
+	
 
 	private class LoginPosting extends AsyncTask<String, Void, String> {
 
@@ -310,6 +484,7 @@ public class MyStuffMobile extends Activity {
 				// showToast(status);
 				String custid = respobj.getString("custid");
 				// showToast(custid);
+				setCustid(custid);
 
 				// Log.v("myJSON", respobj.toString());
 
