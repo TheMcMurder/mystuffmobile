@@ -228,15 +228,15 @@ containing a value of this type.
     }
     public static final class id {
         public static final int LinearLayout1=0x7f040015;
-        public static final int action_settings=0x7f040021;
+        public static final int action_settings=0x7f040022;
         public static final int alignBounds=0x7f040002;
         public static final int alignMargins=0x7f040003;
         public static final int bottom=0x7f040005;
         public static final int btnlogin=0x7f040014;
-        public static final int btnlogout=0x7f04001b;
-        public static final int btnprint=0x7f04001f;
-        public static final int btnprintpic=0x7f04001c;
-        public static final int btnviewpic=0x7f04001d;
+        public static final int btnlogout=0x7f04001c;
+        public static final int btnprint=0x7f040020;
+        public static final int btnprintpic=0x7f04001d;
+        public static final int btnviewpic=0x7f04001e;
         public static final int center=0x7f04000c;
         public static final int center_horizontal=0x7f04000a;
         public static final int center_vertical=0x7f040008;
@@ -247,11 +247,12 @@ containing a value of this type.
         public static final int fill_horizontal=0x7f04000b;
         public static final int fill_vertical=0x7f040009;
         public static final int firstlayout=0x7f040017;
+        public static final int fourthlayout=0x7f04001a;
         public static final int horizontal=0x7f040000;
-        public static final int iv=0x7f04001e;
+        public static final int iv=0x7f04001f;
         public static final int left=0x7f040006;
-        public static final int lv=0x7f04001a;
-        public static final int numberPicker1=0x7f040020;
+        public static final int lv=0x7f04001b;
+        public static final int numberPicker1=0x7f040021;
         public static final int password=0x7f040013;
         public static final int right=0x7f040007;
         public static final int secondlayout=0x7f040018;

@@ -20,6 +20,8 @@
        <include android:id="@+id/secondlayout" layout="@layout/picturelist" />
        
        <include android:id="@+id/thirdlayout" layout="@layout/picview" />
+       
+        <include android:id="@+id/fourthlayout" layout="@layout/printview" />
 
     </ViewFlipper>
 
