@@ -221,7 +221,10 @@ public class MyStuffMobile extends Activity {
 
 	
 	
-	
+	/**
+	 * this method handles the login button and calls the post method to log in the user
+	 * @param view
+	 */
 	
 
 	public void loginbtnclick(View view) {
@@ -293,6 +296,10 @@ public class MyStuffMobile extends Activity {
 		
 	}
 
+	/**
+	 * This method handles getting and showing a picture
+	 * @param view
+	 */
 	
 	public void PicViewBtnClick(View view) {
 		Log.v("btn", "PicBtnClicked");
@@ -514,6 +521,10 @@ public class MyStuffMobile extends Activity {
 
 	}
 
+	/**
+	 * this method shows the toast parameter sent to the method on the screen
+	 * @param toast
+	 */
 	public void showToast(final String toast) {
 		runOnUiThread(new Runnable() {
 			@Override
@@ -552,6 +563,9 @@ public class MyStuffMobile extends Activity {
 		vf.setDisplayedChild(0);
 		
 	}
+	/**
+	 * this method will refresh the list of pictures in the app
+	 */
 	public void refreshlist(){
 		adapter.clear();
 		adapter.notifyDataSetChanged();
