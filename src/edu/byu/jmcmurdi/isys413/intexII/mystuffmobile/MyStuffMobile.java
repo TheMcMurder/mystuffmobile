@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +81,7 @@ public class MyStuffMobile extends Activity  {
 	TextView totalcost = null;
 	private RadioGroup pictureSizeRadiogroup = null;
 	private RadioButton pictureSizeButton = null;
+	private double dtotalcost = 0;
 	
 	ArrayAdapter<String> adapter = null;
 	
@@ -97,6 +99,14 @@ public class MyStuffMobile extends Activity  {
 		lv = (ListView) findViewById(R.id.lv);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		pictureSizeRadiogroup = (RadioGroup) findViewById(R.id.photosizegroup);
+		pictureSizeRadiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+			public void onCheckedChanged(RadioGroup group, int checkedId){
+				int selectedradioid = pictureSizeRadiogroup.getCheckedRadioButtonId();
+		    	 pictureSizeButton = (RadioButton) findViewById(selectedradioid);
+				String sizeSelection = (String) pictureSizeButton.getText();
+				updateTotalCost(sizeSelection, np1.getValue());
+			}
+		});
 		np1 = (NumberPicker) findViewById(R.id.np1);
 		np1.setMinValue(MIN);
 		np1.setMaxValue(MAX);
@@ -107,7 +117,7 @@ public class MyStuffMobile extends Activity  {
 		    @Override
 		    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 		    	//Log.v("NumberPicker", np1.getValue() +"");
-		    	 double npvalue = np1.getValue();
+		    	 //double npvalue = np1.getValue();
 		    	 int selectedradioid = pictureSizeRadiogroup.getCheckedRadioButtonId();
 		    	 pictureSizeButton = (RadioButton) findViewById(selectedradioid);
 		    	//totalcost.setText("$");
@@ -119,15 +129,26 @@ public class MyStuffMobile extends Activity  {
 
 	}
 	public void updateTotalCost(String selection, int npNumber){
-		
+		double piccost = picSize.get(selection);
+		//totalcost.setText("$" + piccost*npNumber);
+		DecimalFormat decim = new DecimalFormat("0.00");
+		dtotalcost = Double.parseDouble(decim.format(piccost*npNumber));
+		Log.v("total", dtotalcost + "");
+		totalcost.setText("$" + dtotalcost);
 	}
 	
 	
 	public void btnPrintClicked(View view){
+		int selectedradioid = pictureSizeRadiogroup.getCheckedRadioButtonId();
+   	 pictureSizeButton = (RadioButton) findViewById(selectedradioid);
+   	//totalcost.setText("$");
+   	 //showToast("Radio button selected" + pictureSizeButton.getText());
+   	 String sizeSelection = (String) pictureSizeButton.getText();
+   	 updateTotalCost(sizeSelection, np1.getValue());
 		vf.setDisplayedChild(3); 
 			
 		//PRINTGUI here
-		totalcost.setText("$0.00");
+		//totalcost.setText("$0.00");
 
 	}
 	
