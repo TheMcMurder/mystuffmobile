@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -56,11 +57,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
+import android.widget.NumberPicker.OnValueChangeListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.ArrayAdapter;
 
-public class MyStuffMobile extends Activity {
+public class MyStuffMobile extends Activity  {
 	ViewFlipper vf = null;
 	HttpClient client = null;
 	private ArrayList<String> captionList = new ArrayList<String>();
@@ -70,9 +76,18 @@ public class MyStuffMobile extends Activity {
 	private int vfloginview = 0;
 	private int vflistview = 0;
 	private boolean vfsentinal = false;
-
+	NumberPicker np1 = null;
+	TextView totalcost = null;
+	private RadioGroup pictureSizeRadiogroup = null;
+	private RadioButton pictureSizeButton = null;
+	
 	ArrayAdapter<String> adapter = null;
-
+	
+	private static int MAX = 400;
+	private static int MIN = 1;
+	//this map pulled on login
+	private HashMap<String, Double> picSize = new HashMap<String,Double>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,9 +96,45 @@ public class MyStuffMobile extends Activity {
 		client = new DefaultHttpClient();
 		lv = (ListView) findViewById(R.id.lv);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		pictureSizeRadiogroup = (RadioGroup) findViewById(R.id.photosizegroup);
+		np1 = (NumberPicker) findViewById(R.id.np1);
+		np1.setMinValue(MIN);
+		np1.setMaxValue(MAX);
+		//np1.setOnValueChangedListener;	
+		//np1.setOnValueChangedListener(onValueChange);
+		totalcost = (TextView) findViewById(R.id.costfinal);
+		np1.setOnValueChangedListener(new OnValueChangeListener() {
+		    @Override
+		    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+		    	//Log.v("NumberPicker", np1.getValue() +"");
+		    	 double npvalue = np1.getValue();
+		    	 int selectedradioid = pictureSizeRadiogroup.getCheckedRadioButtonId();
+		    	 pictureSizeButton = (RadioButton) findViewById(selectedradioid);
+		    	//totalcost.setText("$");
+		    	 //showToast("Radio button selected" + pictureSizeButton.getText());
+		    	 String sizeSelection = (String) pictureSizeButton.getText();
+		    	 updateTotalCost(sizeSelection, np1.getValue());
+		    }
+		});
+
+	}
+	public void updateTotalCost(String selection, int npNumber){
+		
+	}
+	
+	
+	public void btnPrintClicked(View view){
+		vf.setDisplayedChild(3); 
+			
+		//PRINTGUI here
+		totalcost.setText("$0.00");
 
 	}
 	
+	public void np1clicked(View view){
+		Log.v("np1", "I've been clicked");
+		showToast("you changed me");
+	}
 	
 	
 	public void btnNewPicClick(View view) {
@@ -489,11 +540,14 @@ public class MyStuffMobile extends Activity {
 				// showToast("made it 6 baby");
 
 				JSONObject respobj = new JSONObject(EntityUtils.toString(e));
-
+				
+				//Log.v("loginresponse", respobj.toString());
+				
 				// pulling the balance from the JSON object and posting it to
 				// the class variable string object "balance"
 				// balance = respobj.getString("balance");
 
+				@SuppressWarnings("unused")
 				String status = respobj.getString("status");
 				// showToast(status);
 				String custid = respobj.getString("custid");
@@ -501,8 +555,28 @@ public class MyStuffMobile extends Activity {
 				setCustid(custid);
 
 				// Log.v("myJSON", respobj.toString());
-
-				// JSONArray jsonarray = respobj.getJSONArray("piclist");
+				
+				
+				//Placing picprices here
+				
+				String jsonstring = respobj.getString("picprices");
+				
+				//Log.v("jsontring", jsonstring);
+				picSize.clear();
+				JSONObject picpricejson = new JSONObject(jsonstring);
+				double fourbysix = Double.parseDouble(picpricejson.getString("4x6"));
+				double elevenbythirteen = Double.parseDouble(picpricejson.getString("11x13"));
+				double sixteenbytwenty = Double.parseDouble(picpricejson.getString("16x20"));
+				double fivebyseven = Double.parseDouble(picpricejson.getString("5x7"));
+				double eightbyten = Double.parseDouble(picpricejson.getString("8x10"));
+				
+				picSize.put("4x6", fourbysix);
+				picSize.put("11x13", elevenbythirteen);
+				picSize.put("16x20", sixteenbytwenty);
+				picSize.put("5x7", fivebyseven);
+				picSize.put("8x10", eightbyten);
+				
+				//Log.v("truth", picSize.size() + "");
 
 				String S_response = respobj.toString();
 
@@ -572,5 +646,7 @@ public class MyStuffMobile extends Activity {
 		lv.setAdapter(null);
 		loginbtnclick(lv);
 	}
+	
+
 
 }

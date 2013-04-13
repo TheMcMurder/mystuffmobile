@@ -17,10 +17,12 @@
         android:orientation="vertical" >
 
         <Button
-            android:id="@+id/btnprint"
+            android:id="@+id/btnprintfinal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="btnPrintClicked"
             android:text="Print" />
+
     </LinearLayout>
 
 </LinearLayout>

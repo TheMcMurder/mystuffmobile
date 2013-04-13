@@ -228,13 +228,13 @@ containing a value of this type.
     }
     public static final class id {
         public static final int LinearLayout1=0x7f040015;
-        public static final int action_settings=0x7f040022;
+        public static final int action_settings=0x7f04002c;
         public static final int alignBounds=0x7f040002;
         public static final int alignMargins=0x7f040003;
         public static final int bottom=0x7f040005;
         public static final int btnlogin=0x7f040014;
         public static final int btnlogout=0x7f04001c;
-        public static final int btnprint=0x7f040020;
+        public static final int btnprintfinal=0x7f040020;
         public static final int btnprintpic=0x7f04001d;
         public static final int btnviewpic=0x7f04001e;
         public static final int center=0x7f04000c;
@@ -242,6 +242,7 @@ containing a value of this type.
         public static final int center_vertical=0x7f040008;
         public static final int clip_horizontal=0x7f04000f;
         public static final int clip_vertical=0x7f04000e;
+        public static final int costfinal=0x7f04002b;
         public static final int end=0x7f040011;
         public static final int fill=0x7f04000d;
         public static final int fill_horizontal=0x7f04000b;
@@ -252,11 +253,20 @@ containing a value of this type.
         public static final int iv=0x7f04001f;
         public static final int left=0x7f040006;
         public static final int lv=0x7f04001b;
-        public static final int numberPicker1=0x7f040021;
+        public static final int np1=0x7f040021;
         public static final int password=0x7f040013;
+        public static final int photosizegroup=0x7f040023;
+        public static final int r0=0x7f040024;
+        public static final int r1=0x7f040025;
+        public static final int r2=0x7f040026;
+        public static final int r3=0x7f040027;
+        public static final int r4=0x7f040028;
         public static final int right=0x7f040007;
         public static final int secondlayout=0x7f040018;
         public static final int start=0x7f040010;
+        public static final int textView1=0x7f040022;
+        public static final int textView2=0x7f04002a;
+        public static final int textView3=0x7f040029;
         public static final int thirdlayout=0x7f040019;
         public static final int top=0x7f040004;
         public static final int username=0x7f040012;
