@@ -79,9 +79,11 @@ public class MyStuffMobile extends Activity  {
 	private boolean vfsentinal = false;
 	NumberPicker np1 = null;
 	TextView totalcost = null;
+	TextView numPics = null;
 	private RadioGroup pictureSizeRadiogroup = null;
 	private RadioButton pictureSizeButton = null;
 	private double dtotalcost = 0;
+	private ArrayList<String> checkeditems = null; 
 	
 	ArrayAdapter<String> adapter = null;
 	
@@ -113,6 +115,7 @@ public class MyStuffMobile extends Activity  {
 		//np1.setOnValueChangedListener;	
 		//np1.setOnValueChangedListener(onValueChange);
 		totalcost = (TextView) findViewById(R.id.costfinal);
+		numPics = (TextView) findViewById(R.id.numofpics);
 		np1.setOnValueChangedListener(new OnValueChangeListener() {
 		    @Override
 		    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -128,12 +131,95 @@ public class MyStuffMobile extends Activity  {
 		});
 
 	}
+	
+	public void btnfinalprintclick(View view){
+		if(checkeditems.size() == 0){
+			showToast("You haven't selected any items to print");
+		}else
+		{
+			//TODO
+			for(String s: checkeditems){
+				int selectedradioid = pictureSizeRadiogroup.getCheckedRadioButtonId();
+		    	 pictureSizeButton = (RadioButton) findViewById(selectedradioid);
+				//showToast("I'll print your item called " + s);
+				double piccost = picSize.get(pictureSizeButton.getText());
+				double numselected = np1.getValue();
+				transactionPosting tPosting = new transactionPosting (piccost, numselected);
+				System.out.println(getCustid());
+				tPosting.execute();
+			}
+			
+		}
+	}
+	
+	
+	
+	private class transactionPosting extends AsyncTask<String, Void, String> {
+		public transactionPosting(double cost, double quantity) {
+			transCost = cost;
+			q = quantity;
+		}
+
+		private double transCost = 0;
+		private double q = 0;
+		String cust_id = custid;
+		
+
+		/**
+		 * The portion of the asynchronous task that runs in the background
+		 */
+		protected String doInBackground(String... image) {
+			try {
+
+			
+
+				// Create a new HttpClient and Post Header
+				HttpClient httpclient = new DefaultHttpClient();
+				HttpPost httppost = new HttpPost("http://mystuffsonline.com/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.MobileMakeMoney.action");
+
+				// setting up the nameVaule pairs
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+				
+				nameValuePairs.add(new BasicNameValuePair("customerid", cust_id));
+				nameValuePairs.add(new BasicNameValuePair("cost", transCost+""));
+				nameValuePairs.add(new BasicNameValuePair("quantity", q+""));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+				HttpResponse response = null;
+
+				response = httpclient.execute(httppost);
+
+				HttpEntity e = response.getEntity();
+
+				JSONObject respobj = new JSONObject(EntityUtils.toString(e));
+
+				String status = (String)respobj.get("status");
+				
+				showToast(status);
+
+				String S_response = respobj.toString();
+
+				return S_response;
+			} catch (Exception e) {
+				Log.v("tag", "The Transaction to the server failed");
+			}
+			return "failed";
+		} /* do in background */
+
+	}
+	
+	
 	public void updateTotalCost(String selection, int npNumber){
+		int selectedItems = checkeditems.size();
 		double piccost = picSize.get(selection);
 		//totalcost.setText("$" + piccost*npNumber);
 		DecimalFormat decim = new DecimalFormat("0.00");
-		dtotalcost = Double.parseDouble(decim.format(piccost*npNumber));
-		Log.v("total", dtotalcost + "");
+		dtotalcost = Double.parseDouble(decim.format(piccost*npNumber*selectedItems));
+		//Log.v("total", dtotalcost + "");
+		
+		//Log.v("items",selectedItems+"");
+		numPics.setText(selectedItems+"");
 		totalcost.setText("$" + dtotalcost);
 	}
 	
@@ -144,6 +230,16 @@ public class MyStuffMobile extends Activity  {
    	//totalcost.setText("$");
    	 //showToast("Radio button selected" + pictureSizeButton.getText());
    	 String sizeSelection = (String) pictureSizeButton.getText();
+   	SparseBooleanArray items = new SparseBooleanArray();
+	items = lv.getCheckedItemPositions();
+	checkeditems = new ArrayList<String>();
+	for (int i = 0 ; i < items.size(); i++){
+		int position = items.keyAt(i);
+		if (items.valueAt(i)){
+			checkeditems.add(adapter.getItem(position));
+		}
+		
+	}
    	 updateTotalCost(sizeSelection, np1.getValue());
 		vf.setDisplayedChild(3); 
 			
@@ -252,7 +348,7 @@ public class MyStuffMobile extends Activity  {
 				
 				// Create a new HttpClient and Post Header
 				HttpClient httpclient = new DefaultHttpClient();
-				HttpPost httppost = new HttpPost("http://10.0.2.2:2020/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.Postimage.action");
+				HttpPost httppost = new HttpPost("http://mystuffsonline.com/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.Postimage.action");
 
 				// setting up the nameVaule pairs
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -379,7 +475,7 @@ public class MyStuffMobile extends Activity  {
 		//showToast(lv.getCheckedItemPosition() + "");
 		SparseBooleanArray items = new SparseBooleanArray();
 		items = lv.getCheckedItemPositions();
-		ArrayList<String> checkeditems = new ArrayList<String>();
+		checkeditems = new ArrayList<String>();
 		for (int i = 0 ; i < items.size(); i++){
 			int position = items.keyAt(i);
 			if (items.valueAt(i)){
@@ -450,7 +546,7 @@ public class MyStuffMobile extends Activity  {
 				// Create a new HttpClient and Post Header
 				HttpClient httpclient = new DefaultHttpClient();
 
-				HttpPost httppost = new HttpPost("http://10.0.2.2:2020/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.GetPic.action");
+				HttpPost httppost = new HttpPost("http://mystuffsonline.com/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.GetPic.action");
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 				
 				nameValuePairs.add(new BasicNameValuePair("ismobile", "true"));
@@ -538,7 +634,7 @@ public class MyStuffMobile extends Activity  {
 				HttpClient httpclient = new DefaultHttpClient();
 
 				HttpPost httppost = new HttpPost(
-						"http://10.0.2.2:2020/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.Login.action");
+						"http://mystuffsonline.com/MystuffWeb/edu.byu.isys413.jmcmurdi.actions.Login.action");
 				// showToast("made it 2 baby");
 				// setting up the nameVaule pairs
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -559,15 +655,16 @@ public class MyStuffMobile extends Activity  {
 				// showToast("made it 5 baby");
 				HttpEntity e = response.getEntity();
 				// showToast("made it 6 baby");
+				//Log.v("response", EntityUtils.toString(e));
 
 				JSONObject respobj = new JSONObject(EntityUtils.toString(e));
-				
-				//Log.v("loginresponse", respobj.toString());
+								//Log.v("loginresponse", respobj.toString());
 				
 				// pulling the balance from the JSON object and posting it to
 				// the class variable string object "balance"
 				// balance = respobj.getString("balance");
 
+				
 				@SuppressWarnings("unused")
 				String status = respobj.getString("status");
 				// showToast(status);
@@ -610,6 +707,7 @@ public class MyStuffMobile extends Activity  {
 				e.printStackTrace(pw);
 				String test = sw.toString(); // stack trace as a string
 				Log.v("tag", test);
+				
 			}
 			return "failed";
 		} /* do in background */

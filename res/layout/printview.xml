@@ -7,6 +7,47 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_weight="0.03" >
+
+        <LinearLayout
+            android:layout_width="182dp"
+            android:layout_height="match_parent"
+            android:gravity="right|center_vertical|center_horizontal" >
+
+            <TextView
+                android:id="@+id/PicturesSelected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of pictures Selected"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/numofpics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.03" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.35" >
 
@@ -127,6 +168,7 @@
         android:id="@+id/btnprintfinal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="btnfinalprintclick"
         android:text="Print" />
 
 </LinearLayout>
